@@ -112,57 +112,63 @@ export default function TranslationApp() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-2 sm:p-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
+        <div className="text-center mb-4 sm:mb-8">
+          <h1 className="text-2xl sm:text-4xl font-bold text-gray-800 mb-2">
             🇻🇳 → 🇺🇸 Luyện dịch cùng AI
           </h1>
-          <p className="text-gray-600">
+          <p className="text-sm sm:text-base text-gray-600 px-2">
             Cải thiện kỹ năng dịch tiếng Anh với sự hỗ trợ của AI thông minh
           </p>
         </div>
 
         {/* Main Content */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
-          {/* Reset Button */}
-          <div className="flex justify-end gap-2 mb-6">
-            {/* Hiển thị label nhỏ để chọn độ khó và combobox */}
-            <div className="flex items-center justify-center gap-2">
-              <label className="text-sm text-gray-600 mr-2">Chọn độ khó:</label>
-              <select
-                value={currentLevel}
-                onChange={handleLevelChange}
-                className="text-black border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                {levels.map((level) => (
-                  <option key={level.level} value={level.level}>
-                    {level.level}
-                  </option>
-                ))}
-              </select>
-            </div>
-            {/* Hiển thị label nhỏ để chọn chủ đề và combobox */}
-            <div className="flex items-center justify-center gap-2">
-              <label className="text-sm text-gray-600 mr-2">Chọn chủ đề:</label>
-              <select
-                value={currentTopic}
-                onChange={handleTopicChange}
-                className="text-black border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                {topics.map((topic) => (
-                  <option key={topic} value={topic}>
-                    {topic}
-                  </option>
-                ))}
-              </select>
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-8 mb-4 sm:mb-6">
+          {/* Controls - Mobile Optimized */}
+          <div className="mb-4 sm:mb-6">
+            {/* Level and Topic Selection - Stack on mobile */}
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-2 mb-4">
+              <div className="flex-1">
+                <label className="block text-xs sm:text-sm text-gray-600 mb-1 sm:mb-0 sm:mr-2 sm:inline">
+                  Chọn độ khó:
+                </label>
+                <select
+                  value={currentLevel}
+                  onChange={handleLevelChange}
+                  className="w-full sm:w-auto text-black border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  {levels.map((level) => (
+                    <option key={level.level} value={level.level}>
+                      {level.level}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              
+              <div className="flex-1">
+                <label className="block text-xs sm:text-sm text-gray-600 mb-1 sm:mb-0 sm:mr-2 sm:inline">
+                  Chọn chủ đề:
+                </label>
+                <select
+                  value={currentTopic}
+                  onChange={handleTopicChange}
+                  className="w-full sm:w-auto text-black border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  {topics.map((topic) => (
+                    <option key={topic} value={topic}>
+                      {topic}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
-            {/* Reset button */}
+            {/* Reset button - Full width on mobile */}
             <button
               onClick={resetSentence}
-              className="group flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+              className="w-full sm:w-auto group flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
             >
               <RefreshCw size={16} id="refreshIcon" className="group-hover:animate-spin" />
               Bắt đầu lại
@@ -170,19 +176,19 @@ export default function TranslationApp() {
           </div>
 
           {/* Vietnamese Sentence */}
-          <div className="mb-6">
+          <div className="mb-4 sm:mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               📝 Dịch câu sau sang tiếng Anh:
             </label>
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <p className="text-lg font-medium text-blue-900">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
+              <p className="text-base sm:text-lg font-medium text-blue-900 leading-relaxed">
                 &quot;{currentVietnamese}&quot;
               </p>
             </div>
           </div>
 
           {/* Translation Input */}
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 ✍️ Bản dịch của bạn:
@@ -190,18 +196,18 @@ export default function TranslationApp() {
               <textarea
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
-                className="text-black w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                className="text-black w-full p-3 sm:p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm sm:text-base"
                 rows={3}
                 placeholder="Nhập bản dịch tiếng Anh tại đây..."
                 disabled={isLoading}
               />
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <button
                 onClick={handleSubmit}
                 disabled={!userInput.trim() || isLoading}
-                className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium"
+                className="flex-1 bg-blue-600 text-white py-3 px-4 sm:px-6 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium text-sm sm:text-base"
               >
                 {isLoading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -215,7 +221,7 @@ export default function TranslationApp() {
               
               <button
                 onClick={() => setShowHint(!showHint)}
-                className="px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                className="sm:w-auto px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm sm:text-base whitespace-nowrap"
               >
                 💡 Gợi ý
               </button>
@@ -224,7 +230,7 @@ export default function TranslationApp() {
 
           {/* Hint */}
           {showHint && (
-            <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-3 sm:p-4">
               <p className="text-sm text-yellow-800">
                 <strong>💡 Gợi ý:</strong> Chú ý đến thì của động từ và chủ ngữ trong câu. Hãy dịch từng từ một cách cẩn thận.
               </p>
@@ -234,52 +240,53 @@ export default function TranslationApp() {
 
         {/* Feedback */}
         {feedback && (
-          <div className="bg-white rounded-2xl shadow-xl p-8">
-            <div className="space-y-6">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-8">
+            <div className="space-y-4 sm:space-y-6">
               {/* Score */}
-              <div className={`${getScoreBackground(feedback.score)} rounded-xl p-6 text-center`}>
-                <div className="flex items-center justify-center gap-3 mb-2">
-                  <Award className={getScoreColor(feedback.score)} size={32} />
-                  <span className={`text-3xl font-bold ${getScoreColor(feedback.score)}`}>
+              <div className={`${getScoreBackground(feedback.score)} rounded-xl p-4 sm:p-6 text-center`}>
+                <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2">
+                  <Award className={getScoreColor(feedback.score)} size={24} />
+                  <span className={`text-2xl sm:text-3xl font-bold ${getScoreColor(feedback.score)}`}>
                     {feedback.score}/10
                   </span>
                 </div>
-                <p className="text-gray-600">
+                <p className="text-sm sm:text-base text-gray-600">
                   {feedback.score >= 8 ? 'Xuất sắc!' : 
-                   feedback.score >= 6 ? 'Tốt, cần cải thiện!' : 
-                   'Cần luyện tập thêm!'}
+                  feedback.score >= 6 ? 'Tốt, cần cải thiện!' : 
+                  'Cần luyện tập thêm!'}
                 </p>
                 {feedback.isCorrect && feedback.newText && (
-                  <p className="text-green-600 font-medium mt-2">
+                  <p className="text-green-600 font-medium mt-2 text-sm sm:text-base">
                     🎉 Chuyển sang câu mới trong 10 giây...
                   </p>
                 )}
               </div>
 
               {/* Correction */}
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="flex items-start gap-2 sm:gap-3">
                   {feedback.isCorrect ? (
-                    <CheckCircle className="text-green-500 mt-1" size={20} />
+                    <CheckCircle className="text-green-500 mt-1 flex-shrink-0" size={18} />
                   ) : (
-                    <XCircle className="text-red-500 mt-1" size={20} />
+                    <XCircle className="text-red-500 mt-1 flex-shrink-0" size={18} />
                   )}
-                  <div>
-                    <h3 className="font-semibold text-gray-800 mb-2">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-gray-800 mb-2 text-sm sm:text-base">
                       {feedback.isCorrect ? '✅ Bản dịch chính xác!' : '📝 Bản dịch chuẩn:'}
                     </h3>
                     <div className="relative">
-                      <p className="text-lg bg-green-50 border border-green-200 rounded-lg p-3 pe-40 font-medium text-green-900 pr-16 relative">
+                      <p className="text-sm sm:text-lg bg-green-50 border border-green-200 rounded-lg p-3 font-medium text-green-900 pr-12 sm:pr-16 break-words">
                         &quot;{feedback.correction}&quot;
                         <button
                           type="button"
-                          className="absolute top-1 right-1 opacity-70 hover:opacity-100 bg-white border border-gray-200 rounded px-2 py-1 text-xs text-gray-700 hover:bg-gray-100 transition"
+                          className="absolute top-1 right-1 opacity-70 hover:opacity-100 bg-white border border-gray-200 rounded px-1 sm:px-2 py-1 text-xs text-gray-700 hover:bg-gray-100 transition"
                           onClick={() => {
                             navigator.clipboard.writeText(feedback.correction);
                           }}
                           title="Copy to clipboard"
                         >
-                          📋 Copy
+                          📋
+                          <span className="hidden sm:inline ml-1">Copy</span>
                         </button>
                       </p>
                     </div>
@@ -288,11 +295,13 @@ export default function TranslationApp() {
 
                 {/* Detailed Feedback */}
                 {feedback.explanation && (
-                  <div className="flex items-start gap-3">
-                    <BookOpen className="text-blue-500 mt-1" size={20} />
-                    <div>
-                      <h3 className="font-semibold text-gray-800 mb-2">📚 Giải thích chi tiết:</h3>
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-blue-900 space-y-2">
+                  <div className="flex items-start gap-2 sm:gap-3">
+                    <BookOpen className="text-blue-500 mt-1 flex-shrink-0" size={18} />
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-gray-800 mb-2 text-sm sm:text-base">
+                        📚 Giải thích chi tiết:
+                      </h3>
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-blue-900 space-y-2 text-sm sm:text-base">
                         {feedback.explanation
                           .split(/\*\s+/) // Tách từng mục bắt đầu bằng *
                           .filter((line: string) => line.trim() !== "") // Bỏ dòng rỗng
@@ -300,8 +309,8 @@ export default function TranslationApp() {
                             const parts = line.split(/(\*\*[^\*]+\*\*)/g); // Tách phần in đậm
 
                             return (
-                              <p key={idx}>
-                                *{" "}
+                              <p key={idx} className="leading-relaxed">
+                                •{" "}
                                 {parts.map((part, i) => {
                                   if (/^\*\*[^\*]+\*\*$/.test(part)) {
                                     return (
@@ -326,8 +335,11 @@ export default function TranslationApp() {
         )}
 
         {/* Footer */}
-        <div className="text-center mt-8 text-gray-500 text-sm">
-          <p>🤖 Được hỗ trợ bởi AI • Phát triển bởi Lê Cảnh Hùng • Luyện tập đều đặn để tiến bộ nhanh chóng!</p>
+        <div className="text-center mt-6 sm:mt-8 text-gray-500 text-xs sm:text-sm px-2">
+          <p className="leading-relaxed">
+            🤖 Được hỗ trợ bởi AI • Phát triển bởi Lê Cảnh Hùng<br className="sm:hidden" />
+            <span className="hidden sm:inline"> • </span>Luyện tập đều đặn để tiến bộ nhanh chóng!
+          </p>
         </div>
       </div>
     </div>

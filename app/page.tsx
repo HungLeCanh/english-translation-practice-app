@@ -128,16 +128,16 @@ export default function TranslationApp() {
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-8 mb-4 sm:mb-6">
           {/* Controls - Mobile Optimized */}
           <div className="mb-4 sm:mb-6">
-            {/* Level and Topic Selection - Stack on mobile */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-2 mb-4">
-              <div className="flex-1">
+            {/* Level and Topic Selection - Stack on mobile, evenly spaced on desktop */}
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-3 sm:gap-4 mb-4">
+              <div className="flex-1 sm:max-w-xs">
                 <label className="block text-xs sm:text-sm text-gray-600 mb-1 sm:mb-0 sm:mr-2 sm:inline">
                   Chọn độ khó:
                 </label>
                 <select
                   value={currentLevel}
                   onChange={handleLevelChange}
-                  className="w-full sm:w-auto text-black border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full text-black border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   {levels.map((level) => (
                     <option key={level.level} value={level.level}>
@@ -147,14 +147,14 @@ export default function TranslationApp() {
                 </select>
               </div>
               
-              <div className="flex-1">
+              <div className="flex-1 sm:max-w-xs">
                 <label className="block text-xs sm:text-sm text-gray-600 mb-1 sm:mb-0 sm:mr-2 sm:inline">
                   Chọn chủ đề:
                 </label>
                 <select
                   value={currentTopic}
                   onChange={handleTopicChange}
-                  className="w-full sm:w-auto text-black border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full text-black border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   {topics.map((topic) => (
                     <option key={topic} value={topic}>
@@ -165,14 +165,16 @@ export default function TranslationApp() {
               </div>
             </div>
 
-            {/* Reset button - Full width on mobile */}
-            <button
-              onClick={resetSentence}
-              className="w-full sm:w-auto group flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
-            >
-              <RefreshCw size={16} id="refreshIcon" className="group-hover:animate-spin" />
-              Bắt đầu lại
-            </button>
+            {/* Reset button - Full width on mobile, align right on desktop */}
+            <div className="flex">
+              <button
+                onClick={resetSentence}
+                className="w-full sm:w-auto sm:ml-auto group flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+              >
+                <RefreshCw size={16} id="refreshIcon" className="group-hover:animate-spin" />
+                Bắt đầu lại
+              </button>
+            </div>
           </div>
 
           {/* Vietnamese Sentence */}

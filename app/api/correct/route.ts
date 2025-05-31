@@ -233,6 +233,7 @@ Important notes:
 - Use clear and simple Vietnamese for explanations
 - Only provide NEW_SENTENCE if the student deserves it (SCORE >= 7.0)
 - The new sentence should be different from the current one and suitable for translation practice
+- The new sentence should not be the same with the previous one
 `;
 
     let fullResponse: string;

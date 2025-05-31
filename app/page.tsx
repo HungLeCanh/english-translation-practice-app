@@ -134,7 +134,7 @@ export default function TranslationApp() {
               <select
                 value={currentLevel}
                 onChange={handleLevelChange}
-                className="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="text-black border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 {levels.map((level) => (
                   <option key={level.level} value={level.level}>
@@ -149,7 +149,7 @@ export default function TranslationApp() {
               <select
                 value={currentTopic}
                 onChange={handleTopicChange}
-                className="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="text-black border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 {topics.map((topic) => (
                   <option key={topic} value={topic}>
@@ -190,7 +190,7 @@ export default function TranslationApp() {
               <textarea
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
-                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                className="text-black w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                 rows={3}
                 placeholder="Nhập bản dịch tiếng Anh tại đây..."
                 disabled={isLoading}

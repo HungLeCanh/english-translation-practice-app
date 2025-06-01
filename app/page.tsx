@@ -162,9 +162,11 @@ export default function TranslationApp() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-2 sm:p-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-4 sm:mb-8">
-          <h1 className="text-2xl sm:text-4xl font-bold text-gray-800 mb-2">
-            🇻🇳 → 🌍  Luyện dịch đa ngôn ngữ cùng AI
+        <div className="text-center mb-4 sm:mb-8 flex flex-col items-center justify-center">
+          <h1 className="text-2xl sm:text-4xl font-bold text-gray-800 mb-2 flex flex-col sm:flex-row items-center gap-2">
+            <span>Vie -</span>
+            <img src="/globe.svg" alt="Globe icon" className="w-6 h-6 sm:w-8 sm:h-8" />
+            <span>Luyện dịch đa ngôn ngữ cùng AI</span>
           </h1>
           <p className="text-sm sm:text-base text-gray-600 px-2">
             Cải thiện kỹ năng dịch đa ngôn ngữ với sự hỗ trợ của AI thông minh

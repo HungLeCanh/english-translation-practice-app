@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "English Language Practice",
-  description: "A platform for practicing English language skills",
+  title: "Languages Practice",
+  description: "Practice languages with AI-powered corrections and explanations",
 };
 
 export default function RootLayout({

@@ -163,12 +163,13 @@ export default function TranslationApp() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-4 sm:mb-8 flex flex-col items-center justify-center">
-          <h1 className="text-2xl sm:text-4xl font-bold text-gray-800 mb-2 flex flex-col sm:flex-row items-center gap-2">
-            <span>Vie -</span>
-            <img src="/globe.svg" alt="Globe icon" className="w-6 h-6 sm:w-8 sm:h-8" />
-            <span>Luyện dịch đa ngôn ngữ cùng AI</span>
+          <h1 className="text-xl sm:text-4xl font-bold text-gray-800 mb-3 sm:mb-2 flex items-center gap-2 px-2">
+            <span className="text-base sm:text-4xl">Vie</span>
+            <span className="text-base sm:text-4xl">-</span>
+            <img src="/globe.svg" alt="Globe icon" className="w-5 h-5 sm:w-8 sm:h-8 mx-1" />
+            <span className="text-base sm:text-4xl leading-tight">Luyện dịch đa ngôn ngữ cùng AI</span>
           </h1>
-          <p className="text-sm sm:text-base text-gray-600 px-2">
+          <p className="text-xs sm:text-base text-gray-600 px-4 sm:px-2 leading-relaxed max-w-md sm:max-w-none">
             Cải thiện kỹ năng dịch đa ngôn ngữ với sự hỗ trợ của AI thông minh
           </p>
         </div>

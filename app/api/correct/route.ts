@@ -180,10 +180,10 @@ function parseGeminiResponse(fullResponse: string, vieText: string) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { vieText, inputText, level, topic } = await req.json();
+    const { vieText, inputText, language, level, topic } = await req.json();
 
     // Validate input
-    if (!vieText || !inputText || !level || !topic) {
+    if (!vieText || !inputText || !language || !level || !topic ) {
       return NextResponse.json(
         {
           error: 'Missing vieText or inputText',
@@ -199,42 +199,45 @@ export async function POST(req: NextRequest) {
 
     const trimmedVieText = vieText.trim();
     const trimmedInputText = inputText.trim();
+    const trimmedLanguage = language.trim().toLowerCase();
     const trimmedLevel = level.trim();
     const trimmedTopic = topic.trim();
 
     // Tạo prompt tích hợp cho Gemini để vừa đánh giá vừa tạo câu mới nếu cần
     const prompt = `
-You are an English teacher helping Vietnamese students translate sentences accurately.
+    Bạn là một giáo viên ngôn ngữ đang hỗ trợ học viên người Việt luyện dịch câu chính xác sang ngoại ngữ.
 
-Task: Evaluate the student's English translation and provide detailed feedback. If the student scores well (7.0 or above), also generate a new Vietnamese sentence for practice.
+    Nhiệm vụ: Đánh giá bản dịch của học viên và đưa ra nhận xét chi tiết. Nếu học viên đạt điểm từ 7.0 trở lên, hãy tạo thêm một câu tiếng Việt mới phù hợp để học viên luyện tập thêm.
 
-Vietnamese sentence: "${trimmedVieText}"
-Student's English translation: "${trimmedInputText}"
+    Ngôn ngữ đang học: "${trimmedLanguage}"
+    Cấp độ: "${trimmedLevel}"
+    Chủ đề: "${trimmedTopic}"
 
-Evaluation criteria:
-- Meaning accuracy (most important)
-- Grammar correctness  
-- Vocabulary appropriateness
-- Natural expression in English
+    Câu tiếng Việt gốc: "${trimmedVieText}"
+    Bản dịch của học viên: "${trimmedInputText}"
 
-Please respond in this EXACT format:
-CORRECT_TRANSLATION: [Provide the most natural and accurate English translation]
-IS_CORRECT: [true if the translation is acceptable with correct meaning and grammar, false if there are significant errors]
-EXPLANATION: [Detailed explanation in VIETNAMESE(just VIETNAMESE please) about what's good/wrong, including grammar and vocabulary feedback]
-SCORE: [Score from 0.0 to 10.0, where 10.0 is perfect, 9.0+ is excellent, 7.0-8.0 is good, 5.0-6.0 is acceptable, below 5.0 needs improvement]
-NEW_SENTENCE: [Only if SCORE is 7.0 or above: Generate a new simple Vietnamese sentence (8-15 words) suitable for English translation practice, with topic from user is "${trimmedTopic}" and difficulty level is "${trimmedLevel} TOEIC". The sentence should use basic to intermediate grammar, have clear meaning, and be practical. If SCORE is below 7.0, leave this completely empty]
+    Tiêu chí đánh giá:
+    - Độ chính xác về nghĩa (quan trọng nhất)
+    - Ngữ pháp đúng
+    - Từ vựng phù hợp
+    - Cách diễn đạt tự nhiên theo ngôn ngữ đang học
 
-Important notes:
-- If meaning is completely wrong, IS_CORRECT should be false and SCORE should be low
-- If there are grammar mistakes that affect clarity, IS_CORRECT should be false  
-- Minor word choice issues might still be acceptable if meaning is clear
-- Be encouraging but accurate in your evaluation
-- Always provide a correction for the student's translation
-- Use clear and simple Vietnamese for explanations
-- Only provide NEW_SENTENCE if the student deserves it (SCORE >= 7.0)
-- The new sentence should be different from the current one and suitable for translation practice
-- The new sentence should not be the same with the previous one
-`;
+    Hãy phản hồi chính xác theo định dạng sau:
+    CORRECT_TRANSLATION: [Bản dịch đúng và tự nhiên nhất sang ngôn ngữ đang học]
+    IS_CORRECT: [true nếu bản dịch của học viên chấp nhận được, đúng ngữ pháp và đúng ý; false nếu sai lệch nghiêm trọng]
+    EXPLANATION: [Giải thích CHI TIẾT BẰNG TIẾNG VIỆT về điểm đúng/sai, bao gồm lỗi từ vựng, ngữ pháp, cách diễn đạt]
+    SCORE: [Điểm từ 0.0 đến 10.0, trong đó 10.0 là hoàn hảo, 9.0+ là rất tốt, 7.0–8.0 là tốt, 5.0–6.0 là tạm chấp nhận, dưới 5.0 là cần cải thiện]
+    NEW_SENTENCE: [CHỈ khi SCORE từ 7.0 trở lên: Tạo một câu tiếng Việt mới (8–15 từ), khác câu gốc, phù hợp với chủ đề "${trimmedTopic}", độ khó tương ứng cấp độ "${trimmedLevel}" theo hệ thống ngôn ngữ (VD: HSK, JLPT, TOPIK, CEFR...). Câu nên rõ ràng, thực tế, ngữ pháp đơn giản hoặc trung cấp, phù hợp để dịch sang ngôn ngữ đang học. Nếu SCORE dưới 7.0, phần này để trống]
+
+    Lưu ý:
+    - Nếu nghĩa sai hoàn toàn, IS_CORRECT phải là false và điểm thấp
+    - Nếu ngữ pháp sai khiến câu khó hiểu, IS_CORRECT cũng là false
+    - Có thể chấp nhận lỗi nhỏ nếu không ảnh hưởng ý nghĩa
+    - Luôn đưa ra bản dịch đúng nhất để học viên học hỏi
+    - Giải thích nên ngắn gọn, rõ ràng, dễ hiểu bằng tiếng Việt
+    - Nếu sai về ngữ pháp, hãy giai thích cụ thể lỗi sai (VD: "Thiếu chủ ngữ", "Sai thì động từ", "Dùng từ không phù hợp") và cấu trúc đúng
+    - Câu mới không được trùng câu gốc và phải hữu ích để luyện tập thêm
+    `;
 
     let fullResponse: string;
     try {

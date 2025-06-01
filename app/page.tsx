@@ -2,14 +2,41 @@
 import React, { useState } from 'react';
 import { CheckCircle, XCircle, BookOpen, Award, RefreshCw } from 'lucide-react';
 
+const languages = ["Tiếng Anh", "Tiếng Trung", "Tiếng Nhật", "Tiếng Hàn"];
+
 const levels = [
-  { level: 'A1', text: 'Xin chào' },
-  { level: 'A2', text: 'Tôi thích học tiếng Anh' },
-  { level: 'B1', text: 'Hôm nay trời đẹp, chúng ta nên đi dạo' },
-  { level: 'B2', text: 'Tôi nghĩ rằng việc học ngoại ngữ rất quan trọng trong thời đại toàn cầu hóa' },
-  { level: 'C1', text: 'Trong thế giới hiện đại, việc giao tiếp hiệu quả bằng nhiều ngôn ngữ là một kỹ năng quý giá' },
-  { level: 'C2', text: 'Sự hiểu biết sâu sắc về văn hóa và ngôn ngữ khác nhau giúp chúng ta trở thành công dân toàn cầu tốt hơn' }
+  // Tiếng Anh (CEFR)
+  { language: "Tiếng Anh", level: 'A1', text: 'Xin chào' },
+  { language: "Tiếng Anh", level: 'A2', text: 'Tôi thích học tiếng Anh' },
+  { language: "Tiếng Anh", level: 'B1', text: 'Hôm nay trời đẹp, chúng ta nên đi dạo' },
+  { language: "Tiếng Anh", level: 'B2', text: 'Tôi nghĩ rằng việc học ngoại ngữ rất quan trọng trong thời đại toàn cầu hóa' },
+  { language: "Tiếng Anh", level: 'C1', text: 'Trong thế giới hiện đại, việc giao tiếp hiệu quả bằng nhiều ngôn ngữ là một kỹ năng quý giá' },
+  { language: "Tiếng Anh", level: 'C2', text: 'Sự hiểu biết sâu sắc về văn hóa và ngôn ngữ khác nhau giúp chúng ta trở thành công dân toàn cầu tốt hơn' },
+
+  // Tiếng Trung (HSK)
+  { language: "Tiếng Trung", level: 'HSK1', text: 'Xin chào' },
+  { language: "Tiếng Trung", level: 'HSK2', text: 'Tôi có một anh trai và một em gái.' },
+  { language: "Tiếng Trung", level: 'HSK3', text: 'Thời tiết hôm nay rất đẹp, chúng ta cùng đi công viên nhé.' },
+  { language: "Tiếng Trung", level: 'HSK4', text: 'Học ngoại ngữ rất có ích cho công việc tương lai.' },
+  { language: "Tiếng Trung", level: 'HSK5', text: 'Trong xã hội hiện đại, hiểu biết các nền văn hóa khác nhau rất quan trọng.' },
+  { language: "Tiếng Trung", level: 'HSK6', text: 'Thông qua việc học ngôn ngữ, chúng ta có thể trở thành công dân toàn cầu tốt hơn.' },
+
+  // Tiếng Nhật (JLPT)
+  { language: "Tiếng Nhật", level: 'N5', text: 'Xin chào' },
+  { language: "Tiếng Nhật", level: 'N4', text: 'Tôi học tiếng Nhật mỗi ngày.' },
+  { language: "Tiếng Nhật", level: 'N3', text: 'Hôm nay trời đẹp, hãy đi dạo nhé.' },
+  { language: "Tiếng Nhật", level: 'N2', text: 'Việc học ngoại ngữ rất quan trọng cho tương lai.' },
+  { language: "Tiếng Nhật", level: 'N1', text: 'Hiểu biết về các nền văn hóa và ngôn ngữ khác giúp chúng ta trở thành công dân toàn cầu tốt hơn.' },
+
+  // Tiếng Hàn (TOPIK)
+  { language: "Tiếng Hàn", level: 'TOPIK 1', text: 'Xin chào' },
+  { language: "Tiếng Hàn", level: 'TOPIK 2', text: 'Tôi học tiếng Hàn mỗi ngày.' },
+  { language: "Tiếng Hàn", level: 'TOPIK 3', text: 'Hôm nay trời đẹp, đi dạo thôi.' },
+  { language: "Tiếng Hàn", level: 'TOPIK 4', text: 'Việc học ngoại ngữ rất quan trọng cho tương lai.' },
+  { language: "Tiếng Hàn", level: 'TOPIK 5', text: 'Hiểu biết nhiều nền văn hóa rất quan trọng trong xã hội hiện đại.' },
+  { language: "Tiếng Hàn", level: 'TOPIK 6', text: 'Học ngôn ngữ giúp chúng ta trở thành công dân toàn cầu tốt hơp.' },
 ];
+
 
 const  topics = [ "Tất cả", "Gia đình", "Bạn bè", "Công việc", "Học tập", "Sở thích", "Du lịch", "Thể thao", "Văn hóa", "Ẩm thực", "Công nghệ", "Giáo dục", "Sức khỏe", "Môi trường", "Khoa học", "Lịch sử", "Nghệ thuật", "Âm nhạc", "Phim ảnh", "Thời trang", "Xã hội"];
 
@@ -27,6 +54,8 @@ export default function TranslationApp() {
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  // Thêm state cho ngôn ngữ, độ khó và chủ đề
+  const [currentLanguage, setCurrentLanguage] = useState('Tiếng Anh');
   const [currentLevel, setCurrentLevel] = useState('A1');
   const [currentTopic, setCurrentTopic] = useState('Tất cả');
 
@@ -44,6 +73,7 @@ export default function TranslationApp() {
         body: JSON.stringify({
           vieText: currentVietnamese,
           inputText: userInput.trim(),
+          language: currentLanguage,
           level: currentLevel,
           topic: currentTopic
         })
@@ -76,11 +106,28 @@ export default function TranslationApp() {
     setIsLoading(false);
   };
 
+  // chọn ngôn ngữ
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedLanguage = e.target.value;
+    setCurrentLanguage(selectedLanguage);
+    
+    // Lấy level đầu tiên của ngôn ngữ được chọn
+    const firstLevelOfLanguage = levels.find(level => level.language === selectedLanguage);
+    if (firstLevelOfLanguage) {
+      setCurrentLevel(firstLevelOfLanguage.level);
+      setCurrentVietnamese(firstLevelOfLanguage.text);
+    }
+    
+    setUserInput('');
+    setFeedback(null);
+    setShowHint(false);
+  }
+
   // chọn độ khó
   const handleLevelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedLevel = e.target.value;
     setCurrentLevel(selectedLevel);
-    const selectedSentence = levels.find(level => level.level === selectedLevel)?.text || 'Xin chào';
+    const selectedSentence = levels.find(level => level.level === selectedLevel && level.language === currentLanguage)?.text || 'Xin chào';
     setCurrentVietnamese(selectedSentence);
     setUserInput('');
     setFeedback(null);
@@ -117,10 +164,10 @@ export default function TranslationApp() {
         {/* Header */}
         <div className="text-center mb-4 sm:mb-8">
           <h1 className="text-2xl sm:text-4xl font-bold text-gray-800 mb-2">
-            🇻🇳 → 🇺🇸 Luyện dịch cùng AI
+            🇻🇳 → 🌍  Luyện dịch đa ngôn ngữ cùng AI
           </h1>
           <p className="text-sm sm:text-base text-gray-600 px-2">
-            Cải thiện kỹ năng dịch tiếng Anh với sự hỗ trợ của AI thông minh
+            Cải thiện kỹ năng dịch đa ngôn ngữ với sự hỗ trợ của AI thông minh
           </p>
         </div>
 
@@ -132,6 +179,23 @@ export default function TranslationApp() {
             <div className="flex flex-col sm:flex-row sm:justify-between gap-3 sm:gap-4 mb-4">
               <div className="flex-1 sm:max-w-xs">
                 <label className="block text-xs sm:text-sm text-gray-600 mb-1 sm:mb-0 sm:mr-2 sm:inline">
+                  Chọn ngôn ngữ:
+                </label>
+                <select
+                  value={currentLanguage}
+                  onChange={handleLanguageChange}
+                  className="w-full text-black border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  {languages.map((language) => (
+                    <option key={language} value={language}>
+                      {language}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+                <div className="flex-1 sm:max-w-xs">
+                <label className="block text-xs sm:text-sm text-gray-600 mb-1 sm:mb-0 sm:mr-2 sm:inline">
                   Chọn độ khó:
                 </label>
                 <select
@@ -139,13 +203,15 @@ export default function TranslationApp() {
                   onChange={handleLevelChange}
                   className="w-full text-black border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  {levels.map((level) => (
+                  {levels
+                  .filter((level) => level.language === currentLanguage)
+                  .map((level) => (
                     <option key={level.level} value={level.level}>
-                      {level.level}
+                    {level.level}
                     </option>
                   ))}
                 </select>
-              </div>
+                </div>
               
               <div className="flex-1 sm:max-w-xs">
                 <label className="block text-xs sm:text-sm text-gray-600 mb-1 sm:mb-0 sm:mr-2 sm:inline">
@@ -163,6 +229,7 @@ export default function TranslationApp() {
                   ))}
                 </select>
               </div>
+              
             </div>
 
             {/* Reset button - Full width on mobile, align right on desktop */}

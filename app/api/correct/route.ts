@@ -235,8 +235,10 @@ export async function POST(req: NextRequest) {
     - Có thể chấp nhận lỗi nhỏ nếu không ảnh hưởng ý nghĩa
     - Luôn đưa ra bản dịch đúng nhất để học viên học hỏi
     - Giải thích nên ngắn gọn, rõ ràng, dễ hiểu bằng tiếng Việt
-    - Nếu sai về ngữ pháp, hãy giai thích cụ thể lỗi sai (VD: "Thiếu chủ ngữ", "Sai thì động từ", "Dùng từ không phù hợp") và cấu trúc đúng
+    - Nếu sai về ngữ pháp, hãy giai thích cụ thể lỗi sai (VD: "Thiếu chủ ngữ", "Sai thì động từ", "Dùng từ không phù hợp") và cấu trúc đúng(VD: sai thì quá khứ đơn thì đưa câu giải thích phải có cấu trúc câu của quá khứ đơn(S+V2/ed+O chẳng hạn, nên đưa phù hợp với câu hiện tại) và đặc điểm nhận biết của thì quá khứ đơn) của thì cần dùng(cho từng ngôn ngữ khác nhau)
     - Câu mới không được trùng câu gốc và phải hữu ích để luyện tập thêm
+    - Nên xuống dòng đúng nơi ở nội dung phần EXPLAINATION để dễ đọc, ví dụ như xuốn dòng cho từng lỗi sai, hoặc xuống dòng sau mỗi câu giải thích ngắn gọn 
+    - Bọc nội dung cần in đậm bằng cặp dấu sao (**lorem ipsum**) để dễ nhận diện
     `;
 
     let fullResponse: string;
@@ -255,6 +257,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Parse response từ Gemini
+    // console.log('Full Gemini response:', fullResponse);
     const result = parseGeminiResponse(fullResponse, trimmedVieText);
 
     return NextResponse.json(result);

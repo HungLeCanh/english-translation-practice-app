@@ -375,25 +375,23 @@ export default function TranslationApp() {
                       </h3>
                       <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-blue-900 space-y-2 text-sm sm:text-base">
                         {feedback.explanation
-                          .split(/\*\s+/) // Tách từng mục bắt đầu bằng *
+                          .split("\n") // Tách từng dòng theo xuống dòng
                           .filter((line: string) => line.trim() !== "") // Bỏ dòng rỗng
-                          .map((line: string, idx: React.Key | null | undefined) => {
+                          .map((line: string, idx: React.Key) => {
                             const parts = line.split(/(\*\*[^\*]+\*\*)/g); // Tách phần in đậm
 
                             return (
                               <p key={idx} className="leading-relaxed">
-                                •{" "}
-                                {parts.map((part, i) => {
-                                  if (/^\*\*[^\*]+\*\*$/.test(part)) {
-                                    return (
-                                      <strong key={i} className="font-semibold">
-                                        {part.slice(2, -2)}
-                                      </strong>
-                                    );
-                                  } else {
-                                    return <span key={i}>{part}</span>;
-                                  }
-                                })}
+                                {" "}
+                                {parts.map((part, i) =>
+                                  /^\*\*[^\*]+\*\*$/.test(part) ? (
+                                    <strong key={i} className="font-semibold">
+                                      {part.slice(2, -2)}
+                                    </strong>
+                                  ) : (
+                                    <span key={i}>{part}</span>
+                                  )
+                                )}
                               </p>
                             );
                           })}

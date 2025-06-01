@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Languages Practice",
-  description: "Practice languages with AI-powered corrections and explanations",
+  description: "Practice languages with AI-powered corrections and explanations, a platform built by @lecanhhung",
 };
 
 export default function RootLayout({

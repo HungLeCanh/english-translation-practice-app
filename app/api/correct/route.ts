@@ -250,7 +250,6 @@ export async function POST(req: NextRequest) {
     - Câu mới không được trùng câu gốc và phải hữu ích để luyện tập thêm
     - Nên xuống dòng đúng nơi ở nội dung phần EXPLAINATION để dễ đọc, ví dụ như xuốn dòng cho từng lỗi sai, hoặc xuống dòng sau mỗi câu giải thích ngắn gọn 
     - Bọc nội dung cần in đậm bằng cặp dấu sao (**lorem ipsum**) để dễ nhận diện
-    - Giữa các requests, hãy đảm bảo không dùng lại nội dung đã được lưu trữ của AI, tôi đang thấy AI trả về các câu theo 1 thứ tự giống nhau mỗi lần vào website, điều này có thể do AI đang lưu trữ nội dung đã trả lời trước đó và không tạo ra nội dung mới mỗi lần. Hãy đảm bảo rằng mỗi lần gọi API đều tạo ra nội dung mới và không lặp lại các câu đã trả lời trước đó.
     `;
 
     let fullResponse: string;

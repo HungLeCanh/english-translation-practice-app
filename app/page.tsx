@@ -250,7 +250,7 @@ export default function TranslationApp() {
           {/* Vietnamese Sentence */}
           <div className="mb-4 sm:mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              📝 Dịch câu sau sang tiếng Anh:
+              📝 Dịch câu sau sang {currentLanguage}:
             </label>
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
               <p className="text-base sm:text-lg font-medium text-blue-900 leading-relaxed">

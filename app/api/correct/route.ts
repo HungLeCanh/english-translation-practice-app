@@ -19,6 +19,10 @@ const FALLBACK_SENTENCES = [
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
+// API GEMINI phụ để tránh lỗi quá tải
+const GEMINI_API_KEY_2 = process.env.GEMINI_API_KEY_2;
+const GEMINI_URL_2 = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY_2}`;
+
 async function callGeminiAPI(prompt: string): Promise<string> {
   if (!GEMINI_API_KEY) {
     throw new Error("GEMINI_API_KEY not found in environment variables");
@@ -47,6 +51,60 @@ async function callGeminiAPI(prompt: string): Promise<string> {
 
   try {
     const response = await fetch(GEMINI_URL, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const responseData = await response.json();
+
+    // Extract text from Gemini response
+    if (responseData.candidates && responseData.candidates.length > 0) {
+      const candidate = responseData.candidates[0];
+      if (candidate.content && candidate.content.parts) {
+        return candidate.content.parts[0].text;
+      }
+    }
+
+    throw new Error("Invalid response format from Gemini API");
+
+  } catch (error) {
+    throw new Error(`Gemini API request failed: ${error}`);
+  }
+}
+
+async function callGeminiAPI2(prompt: string): Promise<string> {
+  if (!GEMINI_API_KEY_2) {
+    throw new Error("GEMINI_API_KEY not found in environment variables");
+  }
+
+  const headers = {
+    'Content-Type': 'application/json'
+  };
+
+  const payload = {
+    "contents": [
+      {
+        "parts": [
+          {
+            "text": prompt
+          }
+        ]
+      }
+    ],
+    "generationConfig": {
+      "temperature": 0.3,
+      "topP": 0.9,
+      "maxOutputTokens": 1000
+    }
+  };
+
+  try {
+    const response = await fetch(GEMINI_URL_2, {
       method: 'POST',
       headers,
       body: JSON.stringify(payload),
@@ -246,14 +304,28 @@ export async function POST(req: NextRequest) {
       // Gọi Gemini API
       fullResponse = await callGeminiAPI(prompt);
     } catch (error) {
-      console.error('Gemini API error:', error);
-      return NextResponse.json({
-        isCorrect: false,
-        correction: 'Không thể kết nối đến AI model',
-        explanation: 'Có lỗi khi kết nối đến AI. Vui lòng thử lại.',
-        score: 0.0,
-        newText: null
-      });
+      console.error('Gemini API error:', error, 'Trying fallback API');
+      // Nếu gặp lỗi, thử gọi API phụ
+      try {
+        fullResponse = await callGeminiAPI2(prompt);
+      } catch (fallbackError) {
+        console.error('Fallback Gemini API error:', fallbackError);
+        return NextResponse.json({
+          isCorrect: false,
+          correction: 'Không thể kết nối đến AI model, hãy thử nhấn kiểm tra lại lần nữa',
+          explanation: 'Có lỗi khi kết nối đến AI. Hệ thống quá tải, vui lòng thử lại.',
+          score: 0.0,
+          newText: null
+        });
+      }
+      // // Nếu không gọi được API phụ, trả về lỗi
+      // return NextResponse.json({
+      //   isCorrect: false,
+      //   correction: 'Không thể kết nối đến AI model, hãy thử nhấn kiểm tra lại lần nữa',
+      //   explanation: 'Có lỗi khi kết nối đến AI. Hệ thống quá tải, vui lòng thử lại.',
+      //   score: 0.0,
+      //   newText: null
+      // });
     }
 
     // Parse response từ Gemini

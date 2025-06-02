@@ -23,9 +23,10 @@ const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemi
 const GEMINI_API_KEY_2 = process.env.GEMINI_API_KEY_2;
 const GEMINI_URL_2 = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY_2}`;
 
-async function callGeminiAPI(prompt: string): Promise<string> {
-  if (!GEMINI_API_KEY) {
-    throw new Error("GEMINI_API_KEY not found in environment variables");
+async function callGeminiAPI(prompt: string, geminiURL: string, apiKeyName: string): Promise<string> {
+  // Check API key existence based on URL
+  if (!geminiURL || geminiURL.endsWith('undefined')) {
+    throw new Error(`${apiKeyName} not found in environment variables`);
   }
 
   const headers = {
@@ -43,68 +44,14 @@ async function callGeminiAPI(prompt: string): Promise<string> {
       }
     ],
     "generationConfig": {
-      "temperature": 0.3,
-      "topP": 0.9,
+      "temperature": 0.8,
+      "topP": 0.95,
       "maxOutputTokens": 1000
     }
   };
 
   try {
-    const response = await fetch(GEMINI_URL, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const responseData = await response.json();
-
-    // Extract text from Gemini response
-    if (responseData.candidates && responseData.candidates.length > 0) {
-      const candidate = responseData.candidates[0];
-      if (candidate.content && candidate.content.parts) {
-        return candidate.content.parts[0].text;
-      }
-    }
-
-    throw new Error("Invalid response format from Gemini API");
-
-  } catch (error) {
-    throw new Error(`Gemini API request failed: ${error}`);
-  }
-}
-
-async function callGeminiAPI2(prompt: string): Promise<string> {
-  if (!GEMINI_API_KEY_2) {
-    throw new Error("GEMINI_API_KEY not found in environment variables");
-  }
-
-  const headers = {
-    'Content-Type': 'application/json'
-  };
-
-  const payload = {
-    "contents": [
-      {
-        "parts": [
-          {
-            "text": prompt
-          }
-        ]
-      }
-    ],
-    "generationConfig": {
-      "temperature": 0.3,
-      "topP": 0.9,
-      "maxOutputTokens": 1000
-    }
-  };
-
-  try {
-    const response = await fetch(GEMINI_URL_2, {
+    const response = await fetch(geminiURL, {
       method: 'POST',
       headers,
       body: JSON.stringify(payload),
@@ -259,7 +206,13 @@ export async function POST(req: NextRequest) {
     const trimmedInputText = inputText.trim();
     const trimmedLanguage = language.trim().toLowerCase();
     const trimmedLevel = level.trim();
-    const trimmedTopic = topic.trim();
+    let trimmedTopic = topic.trim();
+    // nếu trimmedTopic là "Tất cả" thì tạo 1 chủ đề ngẫu nhiên từ danh sách các chủ đề
+    const  topics = ["Gia đình", "Bạn bè", "Công việc", "Học tập", "Sở thích", "Du lịch", "Thể thao", "Văn hóa", "Ẩm thực", "Công nghệ", "Giáo dục", "Sức khỏe", "Môi trường", "Khoa học", "Lịch sử", "Nghệ thuật", "Âm nhạc", "Phim ảnh", "Thời trang", "Xã hội"];
+    if (trimmedTopic === "Tất cả") {
+      const randomIndex = Math.floor(Math.random() * topics.length);
+      trimmedTopic = topics[randomIndex];
+    }
 
     // Tạo prompt tích hợp cho Gemini để vừa đánh giá vừa tạo câu mới nếu cần
     const prompt = `
@@ -297,35 +250,28 @@ export async function POST(req: NextRequest) {
     - Câu mới không được trùng câu gốc và phải hữu ích để luyện tập thêm
     - Nên xuống dòng đúng nơi ở nội dung phần EXPLAINATION để dễ đọc, ví dụ như xuốn dòng cho từng lỗi sai, hoặc xuống dòng sau mỗi câu giải thích ngắn gọn 
     - Bọc nội dung cần in đậm bằng cặp dấu sao (**lorem ipsum**) để dễ nhận diện
+    - Giữa các requests, hãy đảm bảo không dùng lại nội dung đã được lưu trữ của AI, tôi đang thấy AI trả về các câu theo 1 thứ tự giống nhau mỗi lần vào website, điều này có thể do AI đang lưu trữ nội dung đã trả lời trước đó và không tạo ra nội dung mới mỗi lần. Hãy đảm bảo rằng mỗi lần gọi API đều tạo ra nội dung mới và không lặp lại các câu đã trả lời trước đó.
     `;
 
     let fullResponse: string;
     try {
-      // Gọi Gemini API
-      fullResponse = await callGeminiAPI(prompt);
+      // Gọi Gemini API chính
+      fullResponse = await callGeminiAPI(prompt, GEMINI_URL, 'GEMINI_API_KEY');
     } catch (error) {
       console.error('Gemini API error:', error, 'Trying fallback API');
       // Nếu gặp lỗi, thử gọi API phụ
       try {
-        fullResponse = await callGeminiAPI2(prompt);
+        fullResponse = await callGeminiAPI(prompt, GEMINI_URL_2, 'GEMINI_API_KEY_2');
       } catch (fallbackError) {
         console.error('Fallback Gemini API error:', fallbackError);
         return NextResponse.json({
           isCorrect: false,
-          correction: 'Không thể kết nối đến AI model, hãy thử nhấn kiểm tra lại lần nữa',
-          explanation: 'Có lỗi khi kết nối đến AI. Hệ thống quá tải, vui lòng thử lại.',
+          correction: 'Không thể kết nối đến AI model, hãy thử nhấn kiểm tra lại sau 1-2 phút',
+          explanation: 'Có lỗi khi kết nối đến AI. Hệ thống quá tải, vui lòng thử lại sau 1-2 phút.',
           score: 0.0,
           newText: null
         });
       }
-      // // Nếu không gọi được API phụ, trả về lỗi
-      // return NextResponse.json({
-      //   isCorrect: false,
-      //   correction: 'Không thể kết nối đến AI model, hãy thử nhấn kiểm tra lại lần nữa',
-      //   explanation: 'Có lỗi khi kết nối đến AI. Hệ thống quá tải, vui lòng thử lại.',
-      //   score: 0.0,
-      //   newText: null
-      // });
     }
 
     // Parse response từ Gemini
